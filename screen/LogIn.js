@@ -25,6 +25,10 @@ export default function LogIn({navigation}) {
   const [storeddata, setStoreddata] = useState('');
   const [passwordSecured, setPasswordSecured] = useState(true);
 
+  function showToast() {
+    ToastAndroid.show('Wrong Email or Password', ToastAndroid.SHORT);
+  }
+
   const _storeData = async token => {
     try {
       await AsyncStorage.setItem('staff-token', token);
@@ -60,6 +64,10 @@ export default function LogIn({navigation}) {
       .then(function (response) {
         console.log(response.data);
         console.log(response.data.token);
+        console.log(response.data.msg);
+        if (response.data.msg === 'success' || response.data.msg == 'success') {
+          ToastAndroid.show('Login Successfull....', ToastAndroid.SHORT);
+        }
 
         if (response.data.token != null) {
           _storeData(response.data.token);
@@ -70,6 +78,12 @@ export default function LogIn({navigation}) {
       })
       .catch(function (error) {
         console.log(error.response.data);
+        if (
+          error.response.data.msg == 'Incorrect Password' ||
+          error.response.data.msg === 'Incorrect Password'
+        ) {
+          showToast();
+        }
       });
   };
   return (

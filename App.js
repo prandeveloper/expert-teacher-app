@@ -32,6 +32,9 @@ import CourseList from './screen/CourseList';
 import EditCourse from './screen/EditCourse';
 import AddVideo from './screen/AddVideo';
 import AddPdf from './screen/AddPdf';
+import FullScreen from './screen/FullScreen';
+import PdfRead from './screen/PdfRead';
+import SeeMore from './screen/SeeMore';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -214,8 +217,23 @@ function TabNavigation({navigation}) {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="FullScreen"
+        component={FullScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PdfRead"
+        component={PdfRead}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="Profile"
         component={ProfileEdit}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SeeMore"
+        component={SeeMore}
         options={{headerShown: false}}
       />
       <Stack.Screen

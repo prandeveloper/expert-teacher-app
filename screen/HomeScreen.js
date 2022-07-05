@@ -20,6 +20,23 @@ export default function HomeScreen({navigation}) {
 
   const [recent, setRecent] = useState([]);
   const [count, setCount] = useState({});
+  const [studentCount, setStudentCount] = useState({});
+
+  const getEnrollStudent = async () => {
+    axios
+      .get(`http://65.0.80.5:5000/api/admin/enrollStudentbytoken`, {
+        headers: {
+          'staff-token': await AsyncStorage.getItem('staff-token'),
+        },
+      })
+      .then(response => {
+        console.log(response.data);
+        setStudentCount(response.data);
+      })
+      .catch(error => {
+        console.log(error.response);
+      });
+  };
 
   const getCount = async () => {
     axios
@@ -31,7 +48,7 @@ export default function HomeScreen({navigation}) {
       .then(response => {
         const count = response.data;
         setCount(count);
-        console.log(count);
+        //console.log(count);
       })
       .catch(error => {
         console.log(error.response);
@@ -46,10 +63,10 @@ export default function HomeScreen({navigation}) {
         },
       })
       .then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         const recent = response.data.data;
         setRecent(recent);
-        console.log(recent);
+        //console.log(recent);
       })
       .catch(error => {
         console.log(error.response);
@@ -59,6 +76,7 @@ export default function HomeScreen({navigation}) {
   useEffect(() => {
     getCount();
     if (AsyncStorage.getItem('staff-token')) {
+      getEnrollStudent();
       getRecent();
       getCount();
     }
@@ -222,7 +240,7 @@ export default function HomeScreen({navigation}) {
             <View style={styles.cards}>
               <View style={styles.card1}>
                 <Text style={styles.card11}>Enrolled</Text>
-                <Text style={styles.card11}>200</Text>
+                <Text style={styles.card11}>{studentCount?.count}</Text>
               </View>
               <View style={styles.card2}>
                 <Text style={styles.card22}>Courses</Text>
