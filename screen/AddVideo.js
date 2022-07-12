@@ -51,13 +51,14 @@ export default function AddVideo({navigation}) {
   const videoImage = type => {
     let options = {
       mediaType: 'photo',
-      maxWidth: 100,
-      maxHeight: 100,
+      maxWidth: 200,
+      maxHeight: 200,
       selectionLimit: 1,
+      includeBase64: true,
     };
     launchImageLibrary(options, response => {
-      console.log('response : ' + JSON.stringify(response.assets[0].uri));
-      setvideoImg(response.assets[0].uri);
+      console.log('response : ' + JSON.stringify(response));
+      setvideoImg(response);
       console.log(response);
       if (response.didCancel) {
         alert('User cancelled camera picker');
@@ -81,10 +82,11 @@ export default function AddVideo({navigation}) {
       selectionLimit: 1,
       mediaType: 'video',
       videoQuality: 'high',
+      includeBase64: true,
     };
     launchImageLibrary(options, response => {
-      console.log('response : ' + JSON.stringify(response.assets[0].uri));
-      setVideo(response.assets[0].uri);
+      console.log('response : ' + JSON.stringify(response));
+      setVideo(response);
       console.log(response);
       if (response.didCancel) {
         alert('User cancelled camera picker');
@@ -106,13 +108,13 @@ export default function AddVideo({navigation}) {
     addVideo();
   }
   const addVideo = async () => {
-    console.log(title, selectCourse, videoImg, video);
+    console.log(title, selectCourse, videoImg.assets[0].base64, video.assets);
     let formdata = new FormData();
 
     formdata.append('course', selectCourse);
     formdata.append('videoTitle', title);
-    formdata.append('video_image', videoImg);
-    formdata.append('video_file', video);
+    formdata.append('video_image', videoImg.assets[0].base64);
+    formdata.append('video_file', JSON.stringify(video.assets));
 
     fetch('http://65.0.80.5:5000/api/admin/addvideo', {
       method: 'post',
@@ -152,6 +154,7 @@ export default function AddVideo({navigation}) {
               onValueChange={(itemValue, itemIndex) =>
                 setSelectCourse(itemValue)
               }>
+              <Picker.Item label="Select Course" />
               {course?.map(courses => (
                 <Picker.Item
                   key={courses?._id}

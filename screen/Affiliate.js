@@ -32,7 +32,7 @@ export default function Affiliate({navigation}) {
   const [city, setCity] = useState('');
   const [myState, setMyState] = useState('');
   const [institute, setInstitute] = useState('');
-  const [profileImg, setProfileImg] = useState(null);
+  const [profileImg, setProfileImg] = useState('');
   const [oneStaff, setOneStaff] = useState({});
 
   // <=========================View One Profile Api ==================>
@@ -56,7 +56,7 @@ export default function Affiliate({navigation}) {
         setCity(response.data.data.city);
         setMyState(response.data.data.state);
         setInstitute(response.data.data.institute);
-        //setProfileImg(response.data.data.image);
+        setProfileImg(response.data.data.image);
       })
       .catch(error => {
         console.log(error);
@@ -81,9 +81,8 @@ export default function Affiliate({navigation}) {
     data.append('city', city);
     data.append('state', myState);
     data.append('institute', institute);
-    if (profileImg !== null) {
-      data.append('image', profileImg.assets[0].base64);
-    }
+    data.append('image', profileImg.assets[0].base64);
+
     fetch(`http://65.0.80.5:5000/api/user/settingbytoken`, {
       method: 'post',
       headers: {
@@ -97,7 +96,7 @@ export default function Affiliate({navigation}) {
           console.log(res);
           {
             res.message == 'success' && res.message === 'success'
-              ? Alert.alert('Course Uploaded Successfully')
+              ? Alert.alert('Profile Uploaded Successfully')
               : null;
           }
           // setTitle('');
@@ -303,10 +302,10 @@ export default function Affiliate({navigation}) {
                   />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.form}>
+                {/* <TouchableOpacity style={styles.form}>
                   <Image
                     source={{
-                      uri: `${profileImg?.assets[0].uri}`,
+                      uri: profileImg ? profileImg : null,
                     }}
                     style={{
                       height: 200,
@@ -319,7 +318,7 @@ export default function Affiliate({navigation}) {
                   <Text style={{color: 'black'}}>
                     {profileImg?.assets[0].fileName}
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
           </View>

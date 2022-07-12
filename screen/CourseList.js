@@ -104,6 +104,13 @@ export default function CourseList({navigation}) {
                         )
                         .then(response => {
                           console.log(response.data);
+                          if (
+                            response.data.message == 'deleted' &&
+                            response.data.message === 'deleted'
+                          ) {
+                            Alert.alert('Course Deleted');
+                          }
+                          getAllCourse();
                         })
                         .catch(error => {
                           console.log(error);

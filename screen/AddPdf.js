@@ -56,10 +56,11 @@ export default function AddPdf({navigation}) {
       maxWidth: 100,
       maxHeight: 100,
       selectionLimit: 1,
+      includeBase64: true,
     };
     launchImageLibrary(options, response => {
-      console.log('response : ' + JSON.stringify(response.assets[0].uri));
-      setpdfImg(response.assets[0].uri);
+      console.log('response : ' + JSON.stringify(response));
+      setpdfImg(response);
       console.log(response);
       if (response.didCancel) {
         alert('User cancelled camera picker');
@@ -83,8 +84,8 @@ export default function AddPdf({navigation}) {
         type: [DocumentPicker.types.pdf],
       });
       console.log('res : ' + JSON.stringify(res));
-      setpdf(res[0].uri);
-      console.log(res[0].uri);
+      setpdf(res);
+      console.log(res);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         alert('Canceled from single doc picker');
@@ -124,12 +125,12 @@ export default function AddPdf({navigation}) {
     addPdf();
   }
   const addPdf = async () => {
-    console.log(title, selectCourse, pdfImg, pdf);
+    console.log(title, selectCourse, pdfImg.assets[0].base64, pdf[0].uri);
     let formdata = new FormData();
     formdata.append('course', selectCourse);
     formdata.append('pdf_title', title);
-    formdata.append('pdf_image', pdfImg);
-    formdata.append('pdf_file', pdf);
+    formdata.append('pdf_image', pdfImg.assets[0].base64);
+    formdata.append('pdf_file', pdf[0].uri);
     fetch('http://65.0.80.5:5000/api/admin/addpdf', {
       method: 'post',
       headers: {
@@ -152,7 +153,7 @@ export default function AddPdf({navigation}) {
         });
       })
       .catch(err => {
-        console.log('error');
+        console.log(err);
       });
   };
 

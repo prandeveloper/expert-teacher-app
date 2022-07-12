@@ -57,7 +57,7 @@ export default function UploadCourse({navigation}) {
     };
     launchImageLibrary(options, response => {
       console.log('response : ' + JSON.stringify(response.assets[0].base64));
-      setCourseImg(response.assets[0].base64);
+      setCourseImg(response);
       console.log(response);
       console.log(response.assets[0].base64);
       if (response.didCancel) {
@@ -79,14 +79,14 @@ export default function UploadCourse({navigation}) {
   const posterImage = type => {
     let options = {
       mediaType: 'photo',
-      maxWidth: 100,
-      maxHeight: 100,
+      maxWidth: 400,
+      maxHeight: 400,
       selectionLimit: 1,
       includeBase64: true,
     };
     launchImageLibrary(options, response => {
       console.log('response : ' + JSON.stringify(response.assets[0].base64));
-      setPosterImg(response.assets[0].base64);
+      setPosterImg(response);
       console.log(response);
       console.log(response.assets[0].base64);
       if (response.didCancel) {
@@ -117,8 +117,8 @@ export default function UploadCourse({navigation}) {
     formdata.append('course_type', type);
     formdata.append('category_id', selectCategory);
     formdata.append('desc', desc);
-    formdata.append('course_image', courseImg);
-    formdata.append('posterimg', posterImg);
+    formdata.append('course_image', courseImg.assets[0].base64);
+    formdata.append('posterimg', posterImg.assets[0].base64);
     fetch('http://65.0.80.5:5000/api/admin/addcourse', {
       method: 'post',
       headers: {
@@ -135,6 +135,7 @@ export default function UploadCourse({navigation}) {
               ? Alert.alert('Course Uploaded Successfully')
               : null;
           }
+          navigation.navigate('Home');
           // setTitle('');
           // setvideoImg('');
           // setVideo('');
@@ -216,35 +217,18 @@ export default function UploadCourse({navigation}) {
                   />
                 </TouchableOpacity>
 
-                {/* {screenshot.assets[0].uri == '' &&
-                screenshot.assets[0].uri == undefined &&
-                screenshot.assets[0].uri == null ? (
-                  <TouchableOpacity style={styles.form}>
-                     <Image
-                      source={{uri: `${screenshot.assets[0].uri}`}}
-                      style={{
-                        height: 200,
-                        width: 60,
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                        flex: 1,
-                      }}
-                    /> 
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity style={styles.form}>
-                    <Image
-                      source={{uri: `${screenshot.assets[0].uri}`}}
-                      style={{
-                        height: 200,
-                        width: 60,
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                        flex: 1,
-                      }}
-                    />
-                  </TouchableOpacity>
-                )} */}
+                <TouchableOpacity style={styles.form}>
+                  {/* <Image
+                    source={{uri: `${courseImg.assets[0].uri}`}}
+                    style={{
+                      height: 200,
+                      width: 60,
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      flex: 1,
+                    }}
+                  /> */}
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -263,15 +247,15 @@ export default function UploadCourse({navigation}) {
 
                 <TouchableOpacity style={styles.form}>
                   {/* <Image
-                      source={{uri: `${screenshot.assets[0].uri}`}}
-                      style={{
-                        height: 200,
-                        width: 60,
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                        flex: 1,
-                      }}
-                    />  */}
+                    source={{uri: `${posterImg.assets[0].uri}`}}
+                    style={{
+                      height: 200,
+                      width: 60,
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      flex: 1,
+                    }}
+                  /> */}
                 </TouchableOpacity>
               </View>
             </View>

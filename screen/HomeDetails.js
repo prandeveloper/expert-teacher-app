@@ -99,6 +99,7 @@ export default function HomeDetails({route, navigation, props}) {
               <Image
                 style={styles.courseImage}
                 source={{uri: `${detail?.posterimg}`}}
+                resizeMode="cover"
               />
             </TouchableOpacity>
           </View>

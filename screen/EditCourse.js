@@ -75,8 +75,8 @@ export default function EditCourse({route, navigation}) {
     formdata.append('course_type', type);
     formdata.append('category_id', selectCategory);
     formdata.append('desc', desc);
-    formdata.append('course_image', courseImg);
-    formdata.append('posterimg', posterImg);
+    formdata.append('course_image', courseImg.assets[0].base64);
+    formdata.append('posterimg', posterImg.assets[0].base64);
     fetch(`http://65.0.80.5:5000/api/user/editcoursebystaff/${id}`, {
       method: 'post',
       headers: {
@@ -111,10 +111,11 @@ export default function EditCourse({route, navigation}) {
       maxWidth: 100,
       maxHeight: 100,
       selectionLimit: 1,
+      includeBase64: true,
     };
     launchImageLibrary(options, response => {
-      console.log('Response = ', JSON.stringify(response.assets[0]?.uri));
-      setCourseImg(response.assets[0]?.ur);
+      console.log('Response = ', JSON.stringify(response));
+      setCourseImg(response);
       console.log(response);
       if (response.didCancel) {
         alert('User cancelled camera picker');
@@ -138,10 +139,11 @@ export default function EditCourse({route, navigation}) {
       maxWidth: 100,
       maxHeight: 100,
       selectionLimit: 1,
+      includeBase64: true,
     };
     launchImageLibrary(options, response => {
-      console.log('Response = ', JSON.stringify(response.assets[0]?.uri));
-      setPosterImg(response.assets[0]?.uri);
+      console.log('Response = ', JSON.stringify(response));
+      setPosterImg(response);
       console.log(response);
       if (response.didCancel) {
         alert('User cancelled camera picker');
@@ -229,7 +231,7 @@ export default function EditCourse({route, navigation}) {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.form}>
-                  {/* <Image
+                  <Image
                     source={{uri: courseImg ? courseImg : null}}
                     style={{
                       height: 40,
@@ -238,7 +240,7 @@ export default function EditCourse({route, navigation}) {
                       alignSelf: 'center',
                       flex: 1,
                     }}
-                  /> */}
+                  />
                 </TouchableOpacity>
               </View>
             </View>
@@ -257,8 +259,10 @@ export default function EditCourse({route, navigation}) {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.form}>
-                  {/* <Image
-                    source={{uri: posterImg ? posterImg : null}}
+                  <Image
+                    source={{
+                      uri: posterImg ? posterImg : null,
+                    }}
                     style={{
                       height: 40,
                       width: 140,
@@ -266,7 +270,7 @@ export default function EditCourse({route, navigation}) {
                       alignSelf: 'center',
                       flex: 1,
                     }}
-                  /> */}
+                  />
                 </TouchableOpacity>
               </View>
             </View>

@@ -35,6 +35,7 @@ import AddPdf from './screen/AddPdf';
 import FullScreen from './screen/FullScreen';
 import PdfRead from './screen/PdfRead';
 import SeeMore from './screen/SeeMore';
+import StudentEnrolled from './screen/StudentEnrolled';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -182,6 +183,11 @@ function TabNavigation({navigation}) {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="StudentEnrolled"
+        component={StudentEnrolled}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="About"
         component={About}
         options={{headerShown: false}}
@@ -226,11 +232,11 @@ function TabNavigation({navigation}) {
         component={PdfRead}
         options={{headerShown: false}}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Profile"
         component={ProfileEdit}
         options={{headerShown: false}}
-      />
+      /> */}
       <Stack.Screen
         name="SeeMore"
         component={SeeMore}
@@ -265,9 +271,7 @@ const App = ({navigation}) => {
       });
   };
   useEffect(() => {
-    if (AsyncStorage.getItem('staff-token')) {
-      getUser();
-    }
+    getUser();
   }, []);
 
   const CustomContentContent = ({navigation}) => {
@@ -428,6 +432,27 @@ const App = ({navigation}) => {
                     margin: 10,
                   }}>
                   Add PDF
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                borderBottomColor: '#D3D3D3',
+                borderBottomWidth: 1,
+              }}>
+              <View style={{margin: 10}}>
+                <Icon name="user" type="font-awesome" size={24} />
+              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('StudentEnrolled')}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: 'black',
+                    margin: 10,
+                  }}>
+                  Student Enrolled
                 </Text>
               </TouchableOpacity>
             </View>

@@ -75,11 +75,9 @@ export default function HomeScreen({navigation}) {
 
   useEffect(() => {
     getCount();
-    if (AsyncStorage.getItem('staff-token')) {
-      getEnrollStudent();
-      getRecent();
-      getCount();
-    }
+    getEnrollStudent();
+    getRecent();
+    getCount();
   }, []);
 
   const scrollRef = useRef();
@@ -203,6 +201,7 @@ export default function HomeScreen({navigation}) {
       </View>
     );
   }
+
   return (
     <ScrollView>
       <SafeAreaView style={{flex: 1, backgroundColor: '#ffffff'}}>
@@ -248,6 +247,7 @@ export default function HomeScreen({navigation}) {
               </View>
             </View>
           </View>
+
           <Text style={styles.popular}>My Courses</Text>
           <ScrollView horizontal={true}>
             {recent.map(recents => (
