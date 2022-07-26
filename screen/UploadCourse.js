@@ -135,7 +135,7 @@ export default function UploadCourse({navigation}) {
               ? Alert.alert('Course Uploaded Successfully')
               : null;
           }
-          navigation.navigate('Home');
+          navigation.replace('Home');
           // setTitle('');
           // setvideoImg('');
           // setVideo('');

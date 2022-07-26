@@ -24,7 +24,7 @@ export default function HomeScreen({navigation}) {
 
   const getEnrollStudent = async () => {
     axios
-      .get(`http://65.0.80.5:5000/api/admin/enrollStudentbytoken`, {
+      .get(`http://65.0.80.5:5000/api/admin/total_enroll_user`, {
         headers: {
           'staff-token': await AsyncStorage.getItem('staff-token'),
         },
@@ -203,10 +203,9 @@ export default function HomeScreen({navigation}) {
   }
 
   return (
-    <ScrollView>
-      <SafeAreaView style={{flex: 1, backgroundColor: '#ffffff'}}>
-        <CustomHeader title="Home" navigation={navigation} />
-
+    <SafeAreaView style={{flex: 1, backgroundColor: '#ffffff'}}>
+      <CustomHeader title="Home" navigation={navigation} />
+      <ScrollView>
         <View style={styles.container}>
           <View
             style={{
@@ -312,6 +311,7 @@ export default function HomeScreen({navigation}) {
                           color: 'black',
                           backgroundColor: 'yellow',
                           padding: 5,
+                          textTransform: 'capitalize',
                         }}>
                         {recents?.course_type}
                       </Text>
@@ -322,8 +322,8 @@ export default function HomeScreen({navigation}) {
             ))}
           </ScrollView>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

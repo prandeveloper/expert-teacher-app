@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
@@ -13,61 +15,112 @@ import {
   Dimensions,
   Alert,
   Button,
+  ActionSheetIOS,
 } from 'react-native';
+import CustomHeader from './header/CustomHeader';
+import Moment from 'react-moment';
+import moment from 'moment';
 
-export default function Messaging({navigation}) {
+export default function Messaging({navigation, route}) {
+  const {id} = route.params;
+  console.log(id);
   const [currentUser] = useState({
     name: 'John Doe',
   });
 
-  const [messages, setMessages] = useState([
-    {sender: 'John Doe', message: 'Hey there!', time: '6:01 PM'},
-    {
-      sender: 'Robert Henry',
-      message: 'Hello, how are you doing?',
-      time: '6:02 PM',
-    },
-    {
-      sender: 'John Doe',
-      message: 'I am good, how about you?',
-      time: '6:02 PM',
-    },
-    {
-      sender: 'John Doe',
-      message: `😊😇`,
-      time: '6:02 PM',
-    },
-    {
-      sender: 'Robert Henry',
-      message: `Can't wait to meet you.`,
-      time: '6:03 PM',
-    },
-    {
-      sender: 'John Doe',
-      message: `That's great, when are you coming?`,
-      time: '6:03 PM',
-    },
-    {
-      sender: 'Robert Henry',
-      message: `This weekend.`,
-      time: '6:03 PM',
-    },
-    {
-      sender: 'Robert Henry',
-      message: `Around 4 to 6 PM.`,
-      time: '6:04 PM',
-    },
-    {
-      sender: 'John Doe',
-      message: `Great, don't forget to bring me some mangoes.`,
-      time: '6:05 PM',
-    },
-    {
-      sender: 'Robert Henry',
-      message: `Sure!`,
-      time: '6:05 PM',
-    },
-  ]);
+  setInterval(() => {
+    getChat();
+  }, 50000);
+  const getChat = async () => {
+    axios
+      .get(`http://65.0.80.5:5000/api/user/tcher_student_allchat/${id}`, {
+        headers: {
+          'staff-token': await AsyncStorage.getItem('staff-token'),
+        },
+      })
+      .then(response => {
+        console.log(response.data.data);
+        setMessages(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getChat();
+  }, []);
+
+  const sendMsg = async () => {
+    console.log(inputMessage);
+    axios
+      .post(
+        `http://65.0.80.5:5000/api/user/add_tchrchat/${id}`,
+        {
+          msg: inputMessage,
+        },
+        {
+          headers: {
+            'staff-token': await AsyncStorage.getItem('staff-token'),
+          },
+        },
+      )
+      .then(response => {
+        console.log(response.data);
+        getChat();
+        setInputMessage('');
+      })
+      .catch(error => {
+        console.log(error.response);
+      });
+  };
+
+  const [messages, setMessages] = useState([]);
+  // {sender: 'John Doe', message: 'Hey there!', time: '6:01 PM'},
+  // {
+  //   sender: 'Robert Henry',
+  //   message: 'Hello, how are you doing?',
+  //   time: '6:02 PM',
+  // },
+  // {
+  //   sender: 'John Doe',
+  //   message: 'I am good, how about you?',
+  //   time: '6:02 PM',
+  // },
+  // {
+  //   sender: 'John Doe',
+  //   message: `😊😇`,
+  //   time: '6:02 PM',
+  // },
+  // {
+  //   sender: 'Robert Henry',
+  //   message: `Can't wait to meet you.`,
+  //   time: '6:03 PM',
+  // },
+  // {
+  //   sender: 'John Doe',
+  //   message: `That's great, when are you coming?`,
+  //   time: '6:03 PM',
+  // },
+  // {
+  //   sender: 'Robert Henry',
+  //   message: `This weekend.`,
+  //   time: '6:03 PM',
+  // },
+  // {
+  //   sender: 'Robert Henry',
+  //   message: `Around 4 to 6 PM.`,
+  //   time: '6:04 PM',
+  // },
+  // {
+  //   sender: 'John Doe',
+  //   message: `Great, don't forget to bring me some mangoes.`,
+  //   time: '6:05 PM',
+  // },
+  // {
+  //   sender: 'Robert Henry',
+  //   message: `Sure!`,
+  //   time: '6:05 PM',
+  // },
 
   const [inputMessage, setInputMessage] = useState('');
 
@@ -82,48 +135,26 @@ export default function Messaging({navigation}) {
     return strTime;
   }
 
-  function sendMessage() {
-    if (inputMessage === '') {
-      return setInputMessage('');
-    }
-    let t = getTime(new Date());
-    setMessages([
-      ...messages,
-      {
-        sender: currentUser.name,
-        message: inputMessage,
-        time: t,
-      },
-    ]);
-    setInputMessage('');
-  }
-  function CustomHeader({title}) {
-    return (
-      <View
-        style={{flexDirection: 'row', height: 50, backgroundColor: 'white'}}>
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Chat', {name: 'Chat'})}>
-            <Image
-              style={{width: 30, height: 30, marginLeft: 20}}
-              source={require('../src/back.png')}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={{flex: 3, justifyContent: 'center'}}>
-          <Text style={{textAlign: 'center', fontWeight: '800', fontSize: 20}}>
-            {title}
-          </Text>
-        </View>
-        <View style={{flex: 1, justifyContent: 'center'}}></View>
-      </View>
-    );
-  }
+  // function sendMessage() {
+  //   if (inputMessage === '') {
+  //     return setInputMessage('');
+  //   }
+  //   let t = getTime(new Date());
+  //   setMessages([
+  //     ...messages,
+  //     {
+  //       sender: currentUser.name,
+  //       message: inputMessage,
+  //       time: t,
+  //     },
+  //   ]);
+  //   setInputMessage('');
+  //}
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <CustomHeader />
+        <CustomHeader navigation={navigation} />
         <FlatList
           style={{backgroundColor: 'white'}}
           inverted={true}
@@ -152,7 +183,7 @@ export default function Messaging({navigation}) {
                       color: '#fff',
                       fontSize: 16,
                     }}>
-                    {item.message}
+                    {item.msg}
                   </Text>
                   <Text
                     style={{
@@ -160,7 +191,9 @@ export default function Messaging({navigation}) {
                       fontSize: 14,
                       alignSelf: 'flex-end',
                     }}>
-                    {item.time}
+                    <Moment element={Text} fromNow>
+                      {item.createdAt}
+                    </Moment>
                   </Text>
                 </View>
               </View>
@@ -170,26 +203,26 @@ export default function Messaging({navigation}) {
 
         <View style={{paddingVertical: 10}}>
           <View style={styles.messageInputView}>
-            <TouchableOpacity style={{alignSelf: 'center'}}>
+            {/* <TouchableOpacity style={{alignSelf: 'center'}}>
               <Image
                 style={{width: 30, height: 30}}
                 source={require('../src/image-gallery.png')}
                 resizeMode="contain"
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TextInput
               defaultValue={inputMessage}
               style={styles.messageInput}
               placeholder="Message"
               onChangeText={text => setInputMessage(text)}
-              onSubmitEditing={() => {
-                sendMessage();
-              }}
+              value={inputMessage}
+              placeholderTextColor="#003f5c"
+              color="black"
             />
             <TouchableOpacity
               style={styles.messageSendView}
               onPress={() => {
-                sendMessage();
+                sendMsg();
               }}>
               <Image
                 style={{width: 30, height: 30}}

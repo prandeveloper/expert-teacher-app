@@ -10,7 +10,10 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Swiper from 'react-native-swiper';
-
+import {Icon} from 'react-native-elements';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NotifyHeader from './header/NotifyHeader';
 export default function ChatScreen({navigation}) {
   const [stories, setStories] = useState([
     // {
@@ -50,150 +53,125 @@ export default function ChatScreen({navigation}) {
     // },
   ]);
 
-  const [messages, setMessages] = useState([
-    {
-      userImage: 'https://randomuser.me/api/portraits/women/79.jpg',
-      userName: 'Alma Carpenter',
-      message: {
-        sender: 'Alma Carpenter',
-        text: 'Hello',
-        seenByYou: true,
-        seenByUser: true,
-      },
-      isTyping: true,
-      time: 'now',
-    },
-    {
-      userImage: 'https://randomuser.me/api/portraits/women/81.jpg',
-      userName: 'Sophie Price',
-      message: {
-        sender: 'You',
-        text: 'Are you learning React Native too?',
-        seenByYou: true,
-        seenByUser: false,
-      },
-      time: '03:32 PM',
-    },
-    {
-      userImage: 'https://randomuser.me/api/portraits/men/33.jpg',
-      userName: 'Jessie Collins',
-      message: {
-        sender: 'You',
-        text: 'Bye!',
-        seenByYou: true,
-        seenByUser: true,
-      },
-      time: '01:40 PM',
-    },
-    {
-      userImage: 'https://randomuser.me/api/portraits/men/85.jpg',
-      userName: 'Clinton Meyer',
-      message: {
-        sender: 'Clinton Meyer',
-        text: 'Let me know, what you think?',
-        seenByYou: false,
-        seenByUser: false,
-      },
-      time: '10:37 AM',
-    },
-    {
-      userImage: 'https://randomuser.me/api/portraits/men/60.jpg',
-      userName: 'Brayden Willis',
-      message: {
-        sender: 'Brayden Willis',
-        text: 'Okay, will share it with you by Friday.',
-        seenByYou: true,
-        seenByUser: true,
-      },
-      time: 'Yesterday',
-    },
-    {
-      userImage: 'https://randomuser.me/api/portraits/men/47.jpg',
-      userName: 'Dennis Brown',
-      message: {
-        sender: 'Dennis Brown',
-        text: 'Sure, talk to you later.',
-        seenByYou: true,
-        seenByUser: true,
-      },
-      time: '3 days ago',
-    },
-    {
-      userImage: 'https://randomuser.me/api/portraits/women/21.jpg',
-      userName: 'Dolores Bell',
-      message: {
-        sender: 'You',
-        text: 'Thanks!',
-        seenByYou: true,
-        seenByUser: true,
-      },
-      time: '4 days ago',
-    },
-    {
-      userImage: 'https://randomuser.me/api/portraits/men/54.jpg',
-      userName: 'Everett Green',
-      message: {
-        sender: 'Everett Green',
-        text: 'I am not sure about that.',
-        seenByYou: true,
-        seenByUser: true,
-      },
-      time: 'one month ago',
-    },
-  ]);
+  // const [messages, setMessages] = useState([
+  //   {
+  //     userImage: 'https://randomuser.me/api/portraits/women/79.jpg',
+  //     userName: 'Alma Carpenter',
+  //     message: {
+  //       sender: 'Alma Carpenter',
+  //       text: 'Hello',
+  //       seenByYou: true,
+  //       seenByUser: true,
+  //     },
+  //     isTyping: true,
+  //     time: 'now',
+  //   },
+  //   {
+  //     userImage: 'https://randomuser.me/api/portraits/women/81.jpg',
+  //     userName: 'Sophie Price',
+  //     message: {
+  //       sender: 'You',
+  //       text: 'Are you learning React Native too?',
+  //       seenByYou: true,
+  //       seenByUser: false,
+  //     },
+  //     time: '03:32 PM',
+  //   },
+  //   {
+  //     userImage: 'https://randomuser.me/api/portraits/men/33.jpg',
+  //     userName: 'Jessie Collins',
+  //     message: {
+  //       sender: 'You',
+  //       text: 'Bye!',
+  //       seenByYou: true,
+  //       seenByUser: true,
+  //     },
+  //     time: '01:40 PM',
+  //   },
+  //   {
+  //     userImage: 'https://randomuser.me/api/portraits/men/85.jpg',
+  //     userName: 'Clinton Meyer',
+  //     message: {
+  //       sender: 'Clinton Meyer',
+  //       text: 'Let me know, what you think?',
+  //       seenByYou: false,
+  //       seenByUser: false,
+  //     },
+  //     time: '10:37 AM',
+  //   },
+  //   {
+  //     userImage: 'https://randomuser.me/api/portraits/men/60.jpg',
+  //     userName: 'Brayden Willis',
+  //     message: {
+  //       sender: 'Brayden Willis',
+  //       text: 'Okay, will share it with you by Friday.',
+  //       seenByYou: true,
+  //       seenByUser: true,
+  //     },
+  //     time: 'Yesterday',
+  //   },
+  //   {
+  //     userImage: 'https://randomuser.me/api/portraits/men/47.jpg',
+  //     userName: 'Dennis Brown',
+  //     message: {
+  //       sender: 'Dennis Brown',
+  //       text: 'Sure, talk to you later.',
+  //       seenByYou: true,
+  //       seenByUser: true,
+  //     },
+  //     time: '3 days ago',
+  //   },
+  //   {
+  //     userImage: 'https://randomuser.me/api/portraits/women/21.jpg',
+  //     userName: 'Dolores Bell',
+  //     message: {
+  //       sender: 'You',
+  //       text: 'Thanks!',
+  //       seenByYou: true,
+  //       seenByUser: true,
+  //     },
+  //     time: '4 days ago',
+  //   },
+  //   {
+  //     userImage: 'https://randomuser.me/api/portraits/men/54.jpg',
+  //     userName: 'Everett Green',
+  //     message: {
+  //       sender: 'Everett Green',
+  //       text: 'I am not sure about that.',
+  //       seenByYou: true,
+  //       seenByUser: true,
+  //     },
+  //     time: 'one month ago',
+  //   },
+  // ]);
 
+  const [messages, setMessages] = useState([]);
+  const [student, setStudent] = useState([]);
+  const getStudent = async () => {
+    axios
+      .get(`http://65.0.80.5:5000/api/admin/enrollStudentbytoken`, {
+        headers: {
+          'staff-token': await AsyncStorage.getItem('staff-token'),
+        },
+      })
+      .then(response => {
+        console.log('%%%%%', response.data.student);
+        setStudent(response.data.student);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getStudent();
+  }, []);
   const [currentStoryView, setCurrentStoryView] = useState(stories);
   const [storyModalVisible, setStoryModalVisible] = useState(false);
 
-  function CustomHeader({title, navigation}) {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          height: 50,
-          backgroundColor: '#f1f3f6',
-          marginBottom: 5,
-        }}>
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <TouchableOpacity onPress={() => navigation.navigate('Courses')}>
-            <Image
-              style={{width: 35, height: 35, marginLeft: 20}}
-              source={require('../src/back.png')}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={{flex: 3, justifyContent: 'center'}}>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontWeight: '800',
-              fontSize: 20,
-              color: 'black',
-            }}>
-            {title}
-          </Text>
-        </View>
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <TouchableOpacity>
-            <Image
-              style={{
-                width: 30,
-                height: 30,
-                marginLeft: 20,
-              }}
-              source={require('../src/bell.png')}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
   return (
     <View style={{flex: 1}}>
       {/* Header */}
-      <CustomHeader title="Chat" navigation={navigation} />
+      <NotifyHeader title="CHAT" navigation={navigation} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Stories */}
         <View style={[styles.storiesView]}>
@@ -258,9 +236,9 @@ export default function ChatScreen({navigation}) {
         </View>
         {/* Chats View */}
         <View style={{flex: 1}}>
-          {messages.map(chat => (
+          {student.map(stud => (
             <TouchableOpacity
-              onPress={() => navigation.navigate('Messaging')}
+              onPress={() => navigation.navigate('Messaging', {id: stud._id})}
               style={{
                 marginTop: 10,
                 paddingHorizontal: 10,
@@ -274,54 +252,35 @@ export default function ChatScreen({navigation}) {
               onLongPress={() => {
                 Alert.alert(
                   'Delete Chat?',
-                  `Do you want to delete ${chat.userName}'s chats?`,
+                  `Do you want to delete ${stud.fullname}'s chats?`,
                   [
                     {
                       text: 'Cancel',
                       onPress: () => {},
                       style: 'cancel',
                     },
-                    {
-                      text: 'Yes',
-                      onPress: () => {
-                        let newChats = messages.filter(
-                          m => m.userName !== chat.userName,
-                        );
-                        setMessages(newChats);
-                      },
-                    },
+                    // {
+                    //   text: 'Yes',
+                    //   onPress: () => {
+                    //     let newChats = messages.filter(
+                    //       m => m.userName !== chat.userName,
+                    //     );
+                    //     setMessages(newChats);
+                    //   },
+                    // },
                   ],
                   {cancelable: false},
                 );
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  let chatStory = stories.filter(
-                    story => story.userName === chat.userName,
-                  );
-                  if (chatStory.length > 0) {
-                    setCurrentStoryView(chatStory);
-                    setStoryModalVisible(true);
-                  }
-                }}>
+              <TouchableOpacity>
                 <Image
                   style={{
                     width: 60,
                     height: 60,
                     borderRadius: 100,
-                    borderWidth:
-                      stories.filter(story => story.userName === chat.userName)
-                        .length > 0
-                        ? 4
-                        : null,
-                    borderColor:
-                      stories.filter(story => story.userName === chat.userName)
-                        .length > 0
-                        ? '#3c40c6'
-                        : null,
                   }}
                   source={{
-                    uri: chat.userImage,
+                    uri: stud.userimg[0],
                   }}
                 />
               </TouchableOpacity>
@@ -337,18 +296,18 @@ export default function ChatScreen({navigation}) {
                       fontSize: 18,
                       color: 'black',
                     }}>
-                    {chat.userName}
+                    {stud.fullname}
                   </Text>
-                  <Text
+                  {/* <Text
                     style={{
                       fontFamily: 'NSRegular',
                       fontSize: 14,
-                      color: '#27B9F4',
+                      color: '#7B78E8',
                     }}>
                     {chat.time}
-                  </Text>
+                  </Text> */}
                 </View>
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -366,6 +325,7 @@ export default function ChatScreen({navigation}) {
                   ) : (
                     <Text
                       style={{
+                        color: '#868B8C',
                         fontFamily:
                           chat.message.sender !== 'You'
                             ? chat.message.seenByYou
@@ -373,12 +333,11 @@ export default function ChatScreen({navigation}) {
                               : 'NSBold'
                             : 'NSRegular',
                         fontSize: 16,
-                        color: 'black',
                       }}>
                       {chat.message.text}
                     </Text>
                   )}
-                </View>
+                </View> */}
               </View>
             </TouchableOpacity>
           ))}

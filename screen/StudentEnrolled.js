@@ -27,7 +27,7 @@ export default function StudentEnrolled({navigation}) {
         },
       })
       .then(response => {
-        const enrolled = response.data.data;
+        const enrolled = response.data.student;
         setEnrolled(enrolled);
         console.log('@@@@@@@', enrolled);
       })
@@ -56,7 +56,7 @@ export default function StudentEnrolled({navigation}) {
                 }>
                 {/* <Icon name="user" color="black" size={25} /> */}
                 <Image
-                  source={enroll?.student_Id.userimg}
+                  source={enroll?.userimg[0]}
                   style={{
                     width: 50,
                     height: 50,
@@ -64,9 +64,7 @@ export default function StudentEnrolled({navigation}) {
                   }}
                 />
                 <ListItem.Content>
-                  <ListItem.Title>
-                    {enroll?.student_Id?.fullname}
-                  </ListItem.Title>
+                  <ListItem.Title>{enroll?.fullname}</ListItem.Title>
                   <ListItem.Subtitle style={{color: 'black'}}>
                     Course:- {enroll?.course_Id?.course_title}
                   </ListItem.Subtitle>
